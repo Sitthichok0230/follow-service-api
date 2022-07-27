@@ -8,7 +8,7 @@ const db = require("./db/index.js");
 const { ranking } = db;
 db.sequelize.sync();
 
-const port = 80;
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(bodyParser.json());
@@ -38,7 +38,7 @@ app.use(function (err, req, res, next) {
 });
 
 app.listen(port, () => {
-  console.log(`API server listening at http://localhost:${port}`);
+  console.log(`API server listening at port: ${port}`);
 });
 
 setInterval(myTimer, 24 * 60 * 60 * 1000);
