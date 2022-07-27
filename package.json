@@ -14,7 +14,7 @@
   },
   "scripts": {
     "test": "nodemon -r dotenv/config server.js",
-    "start": "pm2 start server.js"
+    "start": "pm2-runtime server.js"
   },
   "author": "",
   "license": "ISC"
