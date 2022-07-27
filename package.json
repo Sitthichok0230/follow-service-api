@@ -14,7 +14,7 @@
   },
   "scripts": {
     "test": "nodemon -r dotenv/config server.js",
-    "start": "node server.js"
+    "start": "sudo node server.js"
   },
   "author": "",
   "license": "ISC",
