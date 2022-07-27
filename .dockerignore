@@ -1,0 +1,10 @@
+node_modules
+Dockerfile
+.git
+.gitignore
+.jshintrc
+.prettierrc.yml
+.dockerignore
+.vscode
+.idea
+.readmes
