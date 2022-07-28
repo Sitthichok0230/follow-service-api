@@ -7,9 +7,9 @@ module.exports = (sequelize, Sequelize) => {
         primaryKey: true,
         field: 'word',
       },
-      count: {
+      score: {
         type: Sequelize.INTEGER,
-        field: 'count',
+        field: 'score',
       },
       createdAt: {
         type: Sequelize.DATE,

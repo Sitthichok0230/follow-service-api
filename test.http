@@ -1,0 +1,5 @@
+### GET
+GET http://localhost:3000/api/ranking/one HTTP/1.1
+
+### PUT
+PUT http://localhost:3000/api/ranking/one HTTP/1.1
