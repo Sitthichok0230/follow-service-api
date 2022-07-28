@@ -28,6 +28,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 app.use('/api', rankingRouter);
+app.set('view engine', 'ejs');
+app.use(express.static(__dirname + '/public'));
 
 app.use(function (err, req, res, next) {
   res.locals.message = err.message;
@@ -35,6 +37,10 @@ app.use(function (err, req, res, next) {
 
   res.status(err.status || 500);
   res.render('error');
+});
+
+app.get('/', function (req, res) {
+  res.render('homepage');
 });
 
 app.listen(port, () => {
