@@ -12,13 +12,9 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with: 
-          node-version: "16.15.1"
+          node-version: "16.x"
       - name: Install dependencies
         run: npm install
-      - name: Export DATABASE_URL
-        run: export DATABASE_URL="postgres://tpaaksjrklcnpq:928f1665c27ba7bcd878c4115cafabf378fd6c4b603a71a838ac948a625e4fff@ec2-3-213-228-206.compute-1.amazonaws.com:5432/dfe97kmd4t3s4g"
-      - name: Export REDISCLOUD_URL
-        run: export REDISCLOUD_URL="redis://default:Npo2YSdId0CwM4G6e6In3urYnu20vsw0@redis-19061.c8.us-east-1-4.ec2.cloud.redislabs.com:19061"
   deploy:
     runs-on: ubuntu-latest
     needs: [build]
