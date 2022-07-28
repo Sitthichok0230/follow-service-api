@@ -1,5 +1,8 @@
-### GET
+### GET All
 GET https://follow-service.herokuapp.com/api/ranking HTTP/1.1
 
 ### PUT
+PUT https://follow-service.herokuapp.com/api/ranking/one HTTP/1.1
+
+### GET Cache Clear
 PUT https://follow-service.herokuapp.com/api/ranking/one HTTP/1.1
