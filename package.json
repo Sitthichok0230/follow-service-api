@@ -16,7 +16,7 @@
     "sequelize": "^6.21.3"
   },
   "scripts": {
-    "test": "nodemon -r dotenv/config server.js",
+    "test": "node server.js",
     "start": "node server.js"
   },
   "author": "",

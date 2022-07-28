@@ -1,5 +1,5 @@
 ### GET
-GET http://localhost:3000/api/ranking/one HTTP/1.1
+GET https://follow-service.herokuapp.com/api/ranking HTTP/1.1
 
 ### PUT
-PUT http://localhost:3000/api/ranking/one HTTP/1.1
+PUT https://follow-service.herokuapp.com/api/ranking/one HTTP/1.1
