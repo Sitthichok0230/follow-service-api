@@ -1,5 +1,5 @@
 const redis = require('redis');
-const redisClient = redis.createClient({url: process.env.REDIS_URL});
+const redisClient = redis.createClient({url: process.env.REDISCLOUD_URL});
 const express = require('express');
 const router = express.Router();
 const db = require('../db/index.js');
