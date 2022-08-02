@@ -50,14 +50,14 @@ app.get('/admin', function (req, res) {
 });
 
 app.post('/admin', async function (req, res) {
-  const incredental = req.body;
+  const incredental = JSON.parse(req.body);
   if (incredental) {
     await admin
       .findOne({
-        where: {username: req.body.username, password: req.body.password},
+        where: {username: incredental.username, password: incredental.password},
       })
       .then(function (info) {
-        res.render('admin', {username: req.body.username});
+        res.render('admin', {username: incredental.username});
       })
       .catch(function (err) {
         res.render('error');
