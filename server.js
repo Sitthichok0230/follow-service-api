@@ -55,10 +55,10 @@ app.post('/admin', async function (req, res) {
   if (incredental) {
     await admin
       .findOne({
-        where: {username: incredental.username, password: incredental.password},
+        where: {username: req.body.username, password: req.body.password},
       })
       .then(function (info) {
-        res.render('admin', {username: incredental.username});
+        res.render('admin', {username: req.body.username});
       })
       .catch(function (err) {
         res.render('error');
