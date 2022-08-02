@@ -23,11 +23,13 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 const rankingRouter = require('./routes/ranking');
+const newsRouter = require('./routes/news');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 app.use('/api', rankingRouter);
+app.use('/api', newsRouter);
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
 
