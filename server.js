@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const {Op} = require('sequelize');
 const db = require('./db/index.js');
-const {ranking} = db;
+const {ranking, admin, news} = db;
 db.sequelize.sync();
 
 const port = process.env.PORT || 3000;
@@ -40,7 +40,29 @@ app.use(function (err, req, res, next) {
 });
 
 app.get('/', function (req, res) {
-  res.render('homepage');
+  res.render('home');
+});
+
+app.get('/admin', function (req, res) {
+  res.render('login');
+});
+
+app.post('/admin', async function (req, res) {
+  const incredental = req.body;
+  if (incredental) {
+    await admin
+      .findOne({
+        where: {username: incredental.username, password: incredental.password},
+      })
+      .then(function (info) {
+        res.render('admin', {username: incredental.username});
+      })
+      .catch(function (err) {
+        res.render('error');
+      });
+  } else {
+    res.redirect('/admin');
+  }
 });
 
 app.listen(port, () => {

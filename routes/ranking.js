@@ -8,27 +8,35 @@ db.sequelize.sync();
 
 router.route('/cacheclear').get(async (req, res) => {
   redisClient.flushdb();
-  res.send('OK');
+  res.send('cache cleared');
 });
 
 router.route('/ranking?').get(async (req, res) => {
-  redisClient.get('ranking', async (err, data) => {
-    if (err) {
-      console.log(err);
-    } else {
-      if (data) {
-        res.json({data: JSON.parse(data)});
+  const config = req.query.all;
+  if (config) {
+    rankingData = await ranking.findAll({
+      order: [['score', 'DESC']],
+    });
+    res.json({data: rankingData});
+  } else {
+    redisClient.get('ranking', async (err, data) => {
+      if (err) {
+        console.log(err);
       } else {
-        rankingData = await ranking.findAll({
-          limit: 100,
-          order: [['score', 'DESC']],
-        });
-        rankingData = rankingData.map((item) => item.word);
-        redisClient.setex('ranking', 60 * 60, JSON.stringify(rankingData));
-        res.json({data: rankingData});
+        if (data) {
+          res.json({data: JSON.parse(data)});
+        } else {
+          rankingData = await ranking.findAll({
+            limit: 100,
+            order: [['score', 'DESC']],
+          });
+          rankingData = rankingData.map((item) => item.word);
+          redisClient.setex('ranking', 60 * 60, JSON.stringify(rankingData));
+          res.json({data: rankingData});
+        }
       }
-    }
-  });
+    });
+  }
 });
 
 router

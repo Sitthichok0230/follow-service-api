@@ -23,6 +23,8 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
+db.admin = require('./models/admin')(sequelize, Sequelize);
+db.news = require('./models/news')(sequelize, Sequelize);
 db.ranking = require('./models/ranking')(sequelize, Sequelize);
 
 module.exports = db;
