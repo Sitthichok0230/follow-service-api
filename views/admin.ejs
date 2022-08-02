@@ -17,99 +17,128 @@
         integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <% include partials/navbar %>
-        <% if(btnradio){ %>
+    <script>
+        var btnradio = true;
+    </script>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <p>
+                Follow Administrator
+            </p>
+
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                        <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"
+                            value="true" checked>
+                        <label class="btn btn-outline-primary" for="btnradio1"><i class="bi bi-newspaper"></i></label>
+
+                        <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off"
+                            value="false">
+                        <label class="btn btn-outline-primary" for="btnradio2"><i
+                                class="bi bi-arrow-down-up"></i></label>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-link disabled">
+                        <i class="bi bi-person"></i>&nbsp;<%= username %>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <script>document.getElementsByName("btnradio").value = true;
+        var btnradio = document.getElementsByName("btnradio").value;
+    </script>
+    <% if(false){ %>
+        <h1>
+            News Manager
+        </h1>
+        <hr>
+        <div class="news-form">
+            <form onsubmit="event.preventDefault();onFormSubmit();" autocomplete="off">
+                <div>
+                    <label>URL</label>
+                    <input type="text" name="url" id="url">
+                </div>
+                <div>
+                    <label>Logo</label>
+                    <input type="file" name="logo" id="logo">
+                </div>
+                <div class="form-action-buttons">
+                    <input type="submit" value="Submit">
+                </div>
+            </form>
+        </div>
+        <br />
+        <div class="news-table">
+            <table class="table table-striped list" id="newsList">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th>URL</th>
+                        <th>Logo</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="news">
+                </tbody>
+            </table>
+        </div>
+        <script src="script.js"></script>
+        <script>
+            axios.get('/api/news').then(res => {
+                let data = res.data;
+                let html = "";
+                for (let i = 0; i < data.length; i++) {
+                    html += `
+                                                <tr>
+                                                  <th scope="row">${i + 1}</th>
+                                                  <td><a href="${data[i].url}">${data[i].url}</a></td>
+                                                  <td><img src="${data[i].logo}" style="width:100px;"/></td>
+                                                  <td><a onClick="onEdit(this)">Edit</a>
+                                     <a onClick="onDelete(this)">Delete</a></td>
+                                                </tr>
+                                              `;
+                }
+                document.getElementById("news").innerHTML = html;
+            }); </script>
+        <% } else { %>
+            <h1>
+                Ranking
+            </h1>
+            <hr>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Word</th>
+                        <th scope="col">Score</th>
+                        <th scope="col">Created</th>
+                        <th scope="col">Updated</th>
+                    </tr>
+                </thead>
+                <tbody id="ranking">
+                </tbody>
+            </table>
             <script>
-                axios.get('/api/news').then(res => {
+                axios.get('/api/ranking?all=true').then(res => {
                     let data = res.data;
                     let html = "";
                     for (let i = 0; i < data.length; i++) {
                         html += `
-                                        <tr>
-                                          <th scope="row">${i + 1}</th>
-                                          <td><a href="${data[i].url}">${data[i].url}</a></td>
-                                          <td><img src="${data[i].logo}" style="width:100px;"/></td>
-                                          <td>${data[i].created}</td>
-                                          <td>${data[i].updated}</td>
-                                          <td><a onClick="onEdit(this)">Edit</a>
-                             <a onClick="onDelete(this)">Delete</a></td>
-                                        </tr>
-                                      `;
+                                            <tr>
+                                              <th scope="row">${i + 1}</th>
+                                              <td>${data[i].word}</td>
+                                              <td>${data[i].score}</td>
+                                              <td>${data[i].createdAt}</td>
+                                              <td>${data[i].updatedAt}</td>
+                                            </tr>
+                                          `;
                     }
-                    document.getElementById("news").innerHTML = html;
+                    document.getElementById("ranking").innerHTML = html;
                 }); </script>
-            <h1>
-                <center>News Manager</center>
-            </h1>
-            <hr>
-            <div class="news-form">
-                <form onsubmit="event.preventDefault();onFormSubmit();" autocomplete="off">
-                    <div>
-                        <label>URL</label>
-                        <input type="text" name="url" id="url">
-                    </div>
-                    <div>
-                        <label>Logo</label>
-                        <input type="image" name="logo" id="logo">
-                    </div>
-                    <div class="form-action-buttons">
-                        <input type="submit" value="Submit">
-                    </div>
-                </form>
-            </div>
-            <br />
-            <div class="news-table">
-                <table class="table table-striped list" id="newsList">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th>URL</th>
-                            <th>Logo</th>
-                            <th>Actions</th>
-                            <th scope="col">Created</th>
-                            <th scope="col">Updated</th>
-                        </tr>
-                    </thead>
-                    <tbody id="news">
-                    </tbody>
-                </table>
-            </div>
-            <script src="script.js"></script>
-            <% } else{ %>
-                <script>
-                    axios.get('/api/ranking?all=true').then(res => {
-                        let data = res.data;
-                        let html = "";
-                        for (let i = 0; i < data.length; i++) {
-                            html += `
-                            <tr>
-                              <th scope="row">${i + 1}</th>
-                              <td>${data[i].word}</td>
-                              <td>${data[i].score}</td>
-                              <td>${data[i].created}</td>
-                              <td>${data[i].updated}</td>
-                            </tr>
-                          `;
-                        }
-                        document.getElementById("ranking").innerHTML = html;
-                    }); </script>
-                <h1>
-                    <center>Ranking</center>
-                </h1>
-                <hr>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Word</th>
-                            <th scope="col">Score</th>
-                            <th scope="col">Created</th>
-                            <th scope="col">Updated</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ranking">
-                    </tbody>
-                    <% } %>
+            <% } %>
 </body>
 
 </html>

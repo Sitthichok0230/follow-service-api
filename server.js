@@ -54,9 +54,10 @@ app.post('/admin', async function (req, res) {
   if (incredental) {
     await admin
       .findOne({
+        attributes: ['username', 'password'],
         where: {
-          username: String(req.body.username),
-          password: String(req.body.password),
+          username: req.body.username,
+          password: req.body.password,
         },
       })
       .then(function (info) {

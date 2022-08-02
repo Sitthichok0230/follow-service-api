@@ -5,7 +5,9 @@ const {news} = db;
 db.sequelize.sync();
 
 router.route('/news?').get(async (req, res) => {
-  newsData = await news.findAll();
+  newsData = await news.findAll({
+    attributes: ['url', 'logo', 'createdAt', 'updatedAt'],
+  });
   res.json({data: newsData});
 });
 
