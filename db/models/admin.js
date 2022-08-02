@@ -3,7 +3,7 @@ module.exports = (sequelize, Sequelize) => {
     'admin',
     {
       username: {
-        type: Sequelize.VARCHAR(20),
+        type: Sequelize.TEXT,
         field: 'username',
       },
       password: {
