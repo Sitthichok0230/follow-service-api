@@ -50,8 +50,7 @@ app.get('/admin', function (req, res) {
 });
 
 app.post('/admin', async function (req, res) {
-  console.log(req.body);
-  const incredental = req.body.data;
+  const incredental = req.body;
   if (incredental) {
     await admin
       .findOne({
