@@ -50,7 +50,6 @@ app.get('/admin', function (req, res) {
 });
 
 app.post('/admin', async function (req, res) {
-  console.log(req.body.username);
   const incredental = req.body;
   if (incredental) {
     await admin
@@ -64,7 +63,7 @@ app.post('/admin', async function (req, res) {
         res.render('admin', {username: req.body.username});
       })
       .catch(function (err) {
-        res.render('error');
+        res.json({data: err});
       });
   } else {
     res.redirect('/admin');
