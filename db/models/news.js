@@ -3,11 +3,11 @@ module.exports = (sequelize, Sequelize) => {
     'news',
     {
       url: {
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING,
         field: 'url',
       },
       logo: {
-        type: Sequelize.BYTES,
+        type: Sequelize.BLOB,
         field: 'logo',
       },
       createdAt: {
