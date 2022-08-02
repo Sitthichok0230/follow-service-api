@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const {Op} = require('sequelize');
 const db = require('./db/index.js');
-const {ranking, admin, news} = db;
+const {ranking, admin} = db;
 db.sequelize.sync();
 
 const port = process.env.PORT || 3000;
@@ -50,14 +50,18 @@ app.get('/admin', function (req, res) {
 });
 
 app.post('/admin', async function (req, res) {
-  const incredental = JSON.parse(req.body);
+  console.log(req.body.username);
+  const incredental = req.body;
   if (incredental) {
     await admin
       .findOne({
-        where: {username: incredental.username, password: incredental.password},
+        where: {
+          username: String(req.body.username),
+          password: String(req.body.password),
+        },
       })
       .then(function (info) {
-        res.render('admin', {username: incredental.username});
+        res.render('admin', {username: req.body.username});
       })
       .catch(function (err) {
         res.render('error');

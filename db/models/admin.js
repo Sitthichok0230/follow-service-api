@@ -3,11 +3,11 @@ module.exports = (sequelize, Sequelize) => {
     'admin',
     {
       username: {
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING,
         field: 'username',
       },
       password: {
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING,
         field: 'password',
       },
       createdAt: {
