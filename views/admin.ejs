@@ -50,7 +50,7 @@
     <script>document.getElementsByName("btnradio").value = true;
         var btnradio = document.getElementsByName("btnradio").value;
     </script>
-    <% if(false){ %>
+    <% if(true){ %>
         <h1>
             News Manager
         </h1>
@@ -85,24 +85,122 @@
                 </tbody>
             </table>
         </div>
-        <script src="script.js"></script>
+        <!-- <script src="script.js"></script> -->
         <script>
             axios.get('/api/news').then(res => {
-                let data = res.data;
+                let data = res.data.data;
                 let html = "";
                 for (let i = 0; i < data.length; i++) {
+                    // <td><a href="${data[i].url}">${data[i].url}</a></td>
+                    // <td><img src="${data[i].logo}" style="width:100px;"/></td>
+
                     html += `
                                                 <tr>
                                                   <th scope="row">${i + 1}</th>
-                                                  <td><a href="${data[i].url}">${data[i].url}</a></td>
-                                                  <td><img src="${data[i].logo}" style="width:100px;"/></td>
-                                                  <td><a onClick="onEdit(this)">Edit</a>
-                                     <a onClick="onDelete(this)">Delete</a></td>
+                                                  <td>${data[i].url}</td>
+                                                  <td>${data[i].logo}</td>
+                                                  <td><button onClick="onEdit(this)">Edit</button>
+                                     <button onClick="onDelete(this)">Delete</button></td>
                                                 </tr>
                                               `;
                 }
                 document.getElementById("news").innerHTML = html;
-            }); </script>
+            });
+            var selectedRow = null;
+
+            function onFormSubmit() {
+                var formData = readFormData();
+                if (selectedRow == null) insertNewRecord(formData);
+                else updateRecord(formData);
+                resetForm();
+            }
+
+            function readFormData() {
+                var formData = {};
+                formData.url = document.getElementById('url').value;
+                formData.logo = document.getElementById('logo').value;
+                return formData;
+            }
+
+            function insertNewRecord(data) {
+                let xhr1 = new XMLHttpRequest();
+
+                xhr1.open('POST', 'http://dummy.restapiexample.com/api/v1/create', true);
+
+                // xhr1.getResponseHeader('Content-type', 'application/json');
+
+                xhr1.onload = function () {
+                    if (this.status === 200) {
+                        var table = document
+                            .getElementById('newsList')
+                            .getElementsByTagName('tbody')[0];
+                        var newRow = table.insertRow(table.length);
+                        cell1 = newRow.insertCell(0);
+                        cell1.innerHTML = `<a href="${data.url}">${data.url}</a>`;
+                        cell2 = newRow.insertCell(1);
+                        cell2.innerHTML = `<img src="${data.logo}" style="width:100px;"/>`;
+                        cell3 = newRow.insertCell(2);
+                        cell3.innerHTML = `<a onClick="onEdit(this)">Edit</a>
+                             <a onClick="onDelete(this)">Delete</a>`;
+                    } else {
+                        alert('Error! not inserted');
+                    }
+                };
+                xhr1.send(JSON.stringify(data));
+            }
+
+            function resetForm() {
+                document.getElementById('url').value = '';
+                document.getElementById('logo').value = null;
+                selectedRow = null;
+            }
+
+            function onEdit(td) {
+                selectedRow = td.parentElement.parentElement;
+                document.getElementById('url').value = selectedRow.cells[1].innerHTML;
+                document.getElementById('logo').value = selectedRow.cells[2].innerHTML;
+            }
+            function updateRecord(formData) {
+                let xhr2 = new XMLHttpRequest();
+
+                xhr2.open(
+                    'PUT',
+                    `http://dummy.restapiexample.com/api/news?url=${selectedRow.cells[1].innerHTML}`,
+                    true
+                );
+
+                xhr2.onload = function () {
+                    if (this.status === 200) {
+                        selectedRow.cells[1].innerHTML = formData.url;
+                        selectedRow.cells[2].innerHTML = formData.logo;
+                    } else {
+                        alert('Error! not updated');
+                    }
+                };
+                xhr2.send(JSON.stringify(formData));
+            }
+
+            function onDelete(td) {
+                if (confirm('Are you sure to delete this record ?')) {
+                    row = td.parentElement.parentElement;
+                    let xhr3 = new XMLHttpRequest();
+                    xhr3.open(
+                        'DELETE',
+                        `http://dummy.restapiexample.com/api/news?url=${row.cells[1].innerHTML}`,
+                        true
+                    );
+                    xhr3.onload = function () {
+                        if (this.status === 200) {
+                            document.getElementById('newsList').deleteRow(row.rowIndex);
+                            resetForm();
+                        } else {
+                            alert('Error! not deleted');
+                        }
+                    };
+                    xhr3.send();
+                }
+            }
+        </script>
         <% } else { %>
             <h1>
                 Ranking
@@ -123,7 +221,7 @@
             </table>
             <script>
                 axios.get('/api/ranking?all=true').then(res => {
-                    let data = res.data;
+                    let data = res.data.data;
                     let html = "";
                     for (let i = 0; i < data.length; i++) {
                         html += `
@@ -131,8 +229,8 @@
                                               <th scope="row">${i + 1}</th>
                                               <td>${data[i].word}</td>
                                               <td>${data[i].score}</td>
-                                              <td>${data[i].createdAt}</td>
-                                              <td>${data[i].updatedAt}</td>
+                                              <td>${new Date(data[i].createdAt)}</td>
+                                              <td>${new Date(data[i].updatedAt)}</td>
                                             </tr>
                                           `;
                     }
