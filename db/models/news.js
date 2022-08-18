@@ -7,7 +7,7 @@ module.exports = (sequelize, Sequelize) => {
         field: 'url',
       },
       logo: {
-        type: Sequelize.BLOB,
+        type: Sequelize.STRING,
         field: 'logo',
       },
       createdAt: {

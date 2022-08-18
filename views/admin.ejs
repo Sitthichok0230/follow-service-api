@@ -17,25 +17,24 @@
         integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
-        var btnradio = true;
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
-            <p>
+            <h3>
                 Follow Administrator
-            </p>
+            </h3>
 
             <ul class="nav nav-tabs">
                 <li class="nav-item">
                     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                        <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"
+                        <input type="radio" class="btn-check" name="btnradio" id="btn-news" autocomplete="off"
                             value="true" checked>
-                        <label class="btn btn-outline-primary" for="btnradio1"><i class="bi bi-newspaper"></i></label>
+                        <label class="btn btn-outline-primary" for="btn-news"><i class="bi bi-newspaper"></i></label>
 
-                        <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off"
+                        <input type="radio" class="btn-check" name="btnradio" id="btn-ranking" autocomplete="off"
                             value="false">
-                        <label class="btn btn-outline-primary" for="btnradio2"><i
+                        <label class="btn btn-outline-primary" for="btn-ranking"><i
                                 class="bi bi-arrow-down-up"></i></label>
                     </div>
                 </li>
@@ -47,196 +46,40 @@
             </ul>
         </div>
     </nav>
-    <script>document.getElementsByName("btnradio").value = true;
-        var btnradio = document.getElementsByName("btnradio").value;
-    </script>
-    <% if(true){ %>
-        <h1>
-            News Manager
-        </h1>
-        <hr>
-        <div class="news-form">
-            <form onsubmit="event.preventDefault();onFormSubmit();" autocomplete="off">
-                <div>
-                    <label>URL</label>
-                    <input type="text" name="url" id="url">
-                </div>
-                <div>
-                    <label>Logo</label>
-                    <input type="file" name="logo" id="logo">
-                </div>
-                <div class="form-action-buttons">
-                    <input type="submit" value="Submit">
-                </div>
-            </form>
-        </div>
-        <br />
-        <div class="news-table">
-            <table class="table table-striped list" id="newsList">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th>URL</th>
-                        <th>Logo</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="news">
-                </tbody>
-            </table>
-        </div>
-        <!-- <script src="script.js"></script> -->
-        <script>
-            axios.get('/api/news').then(res => {
-                let data = res.data.data;
-                let html = "";
-                for (let i = 0; i < data.length; i++) {
-                    // <td><a href="${data[i].url}">${data[i].url}</a></td>
-                    // <td><img src="${data[i].logo}" style="width:100px;"/></td>
-
-                    html += `
-                                                <tr>
-                                                  <th scope="row">${i + 1}</th>
-                                                  <td>${data[i].url}</td>
-                                                  <td>${data[i].logo}</td>
-                                                  <td><button onClick="onEdit(this)">Edit</button>
-                                     <button onClick="onDelete(this)">Delete</button></td>
-                                                </tr>
-                                              `;
+    <div id="main">
+    </div>
+    <script>
+        $(function () {
+            $.ajax({
+                type: 'GET',
+                url: '/admin/news',
+                success: function (result) {
+                    $('#main').html(result);
                 }
-                document.getElementById("news").innerHTML = html;
             });
-            var selectedRow = null;
-
-            function onFormSubmit() {
-                var formData = readFormData();
-                if (selectedRow == null) insertNewRecord(formData);
-                else updateRecord(formData);
-                resetForm();
-            }
-
-            function readFormData() {
-                var formData = {};
-                formData.url = document.getElementById('url').value;
-                formData.logo = document.getElementById('logo').value;
-                return formData;
-            }
-
-            function insertNewRecord(data) {
-                let xhr1 = new XMLHttpRequest();
-
-                xhr1.open('POST', 'http://dummy.restapiexample.com/api/v1/create', true);
-
-                // xhr1.getResponseHeader('Content-type', 'application/json');
-
-                xhr1.onload = function () {
-                    if (this.status === 200) {
-                        var table = document
-                            .getElementById('newsList')
-                            .getElementsByTagName('tbody')[0];
-                        var newRow = table.insertRow(table.length);
-                        cell1 = newRow.insertCell(0);
-                        cell1.innerHTML = `<a href="${data.url}">${data.url}</a>`;
-                        cell2 = newRow.insertCell(1);
-                        cell2.innerHTML = `<img src="${data.logo}" style="width:100px;"/>`;
-                        cell3 = newRow.insertCell(2);
-                        cell3.innerHTML = `<a onClick="onEdit(this)">Edit</a>
-                             <a onClick="onDelete(this)">Delete</a>`;
-                    } else {
-                        alert('Error! not inserted');
+            $("#btn-news").on("click", function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/admin/news',
+                    success: function (result) {
+                        $('#main').html(result);
                     }
-                };
-                xhr1.send(JSON.stringify(data));
-            }
+                });
 
-            function resetForm() {
-                document.getElementById('url').value = '';
-                document.getElementById('logo').value = null;
-                selectedRow = null;
-            }
-
-            function onEdit(td) {
-                selectedRow = td.parentElement.parentElement;
-                document.getElementById('url').value = selectedRow.cells[1].innerHTML;
-                document.getElementById('logo').value = selectedRow.cells[2].innerHTML;
-            }
-            function updateRecord(formData) {
-                let xhr2 = new XMLHttpRequest();
-
-                xhr2.open(
-                    'PUT',
-                    `http://dummy.restapiexample.com/api/news?url=${selectedRow.cells[1].innerHTML}`,
-                    true
-                );
-
-                xhr2.onload = function () {
-                    if (this.status === 200) {
-                        selectedRow.cells[1].innerHTML = formData.url;
-                        selectedRow.cells[2].innerHTML = formData.logo;
-                    } else {
-                        alert('Error! not updated');
+            })
+            $("#btn-ranking").on("click", function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/admin/ranking',
+                    success: function (result) {
+                        $('#main').html(result);
                     }
-                };
-                xhr2.send(JSON.stringify(formData));
-            }
+                });
 
-            function onDelete(td) {
-                if (confirm('Are you sure to delete this record ?')) {
-                    row = td.parentElement.parentElement;
-                    let xhr3 = new XMLHttpRequest();
-                    xhr3.open(
-                        'DELETE',
-                        `http://dummy.restapiexample.com/api/news?url=${row.cells[1].innerHTML}`,
-                        true
-                    );
-                    xhr3.onload = function () {
-                        if (this.status === 200) {
-                            document.getElementById('newsList').deleteRow(row.rowIndex);
-                            resetForm();
-                        } else {
-                            alert('Error! not deleted');
-                        }
-                    };
-                    xhr3.send();
-                }
-            }
-        </script>
-        <% } else { %>
-            <h1>
-                Ranking
-            </h1>
-            <hr>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Word</th>
-                        <th scope="col">Score</th>
-                        <th scope="col">Created</th>
-                        <th scope="col">Updated</th>
-                    </tr>
-                </thead>
-                <tbody id="ranking">
-                </tbody>
-            </table>
-            <script>
-                axios.get('/api/ranking?all=true').then(res => {
-                    let data = res.data.data;
-                    let html = "";
-                    for (let i = 0; i < data.length; i++) {
-                        html += `
-                                            <tr>
-                                              <th scope="row">${i + 1}</th>
-                                              <td>${data[i].word}</td>
-                                              <td>${data[i].score}</td>
-                                              <td>${new Date(data[i].createdAt)}</td>
-                                              <td>${new Date(data[i].updatedAt)}</td>
-                                            </tr>
-                                          `;
-                    }
-                    document.getElementById("ranking").innerHTML = html;
-                }); </script>
-            <% } %>
+            })
+
+        });
+    </script>
 </body>
 
 </html>

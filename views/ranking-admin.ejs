@@ -1,0 +1,33 @@
+<h5>
+    Ranking Table
+</h5>
+<br />
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Word</th>
+            <th scope="col">Score</th>
+            <th scope="col">Created</th>
+            <th scope="col">Updated</th>
+        </tr>
+    </thead>
+    <tbody id="ranking">
+    </tbody>
+</table>
+<script>
+    axios.get('/api/ranking?all=true').then(res => {
+        let data = res.data.data;
+        let html = "";
+        for (let i = 0; i < data.length; i++) {
+            html += `<tr>
+                        <th scope="row">${i + 1}</th>
+                        <td>${data[i].word}</td>
+                        <td>${data[i].score}</td>
+                        <td>${Date(data[i].createdAt)}</td>
+                        <td>${Date(data[i].updatedAt)}</td>
+                    </tr>`;
+        }
+        document.getElementById("ranking").innerHTML = html;
+    });
+</script>

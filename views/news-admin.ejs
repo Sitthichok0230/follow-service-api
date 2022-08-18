@@ -1,0 +1,134 @@
+<h5>
+    News Manager
+</h5>
+<br />
+<div class="news-form">
+    <form onsubmit="event.preventDefault();onFormSubmit();" autocomplete="off">
+        <div class="mb-3">
+            <label for="url" class="form-label">URL</label>
+            <input type="url" class="form-control" name="url" id="url">
+        </div>
+        <div class="mb-3">
+            <label for="logo" class="form-label">Logo</label>
+            <input type="url" class="form-control" name="logo" id="logo">
+            <img id="blah" src="#" />
+            <script>
+                logo.onchange = evt => {
+                    if (logo.value) {
+                        blah.src = logo.value;
+                    }
+                }
+            </script>
+        </div>
+        <div class="mb-3">
+            <input type="submit" class="btn btn-primary" value="Submit">
+        </div>
+    </form>
+</div>
+<br />
+<h5>
+    News Table
+</h5>
+<br />
+<table class="table table-striped list" id="newsList">
+    <thead>
+        <tr>
+            <th scope="col">URL</th>
+            <th scope="col">Logo</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody id="news">
+    </tbody>
+</table>
+<script>
+    axios.get('/api/news').then(res => {
+        let data = res.data.data;
+        let html = "";
+        for (let i = 0; i < data.length; i++) {
+            html += `<tr>
+                        <td>${data[i].url}</td>
+                        <td>${data[i].logo}</td>
+                        <td>
+                            <button type="button" class="btn btn-outline-secondary" onClick="onEdit(this)">Edit</button>
+                            <button type="button" class="btn btn-outline-danger" onClick="onDelete(this)">Delete</button>
+                        </td>
+                    </tr>`;
+        }
+        news.innerHTML = html;
+    });
+
+    var selectedRow = null;
+
+    function onFormSubmit() {
+        var formData = readFormData();
+        if (selectedRow == null) insertNewRecord(formData);
+        else updateRecord(formData);
+        resetForm();
+    }
+
+    function readFormData() {
+        var formData = {};
+        formData.url = url.value;
+        formData.logo = logo.value;
+        return formData;
+    }
+
+    function insertNewRecord(formData) {
+        axios.post('/api/news', formData).then(res => {
+            if (res.status === 200) {
+                var table = newsList
+                    .getElementsByTagName('tbody')[0];
+                var newRow = table.insertRow(table.length);
+                cell1 = newRow.insertCell(0);
+                cell1.innerHTML = `${formData.url}`;
+                cell2 = newRow.insertCell(1);
+                cell2.innerHTML = `${formData.logo}`;
+                cell3 = newRow.insertCell(2);
+                cell3.innerHTML = `<button type="button" class="btn btn-outline-secondary" onClick="onEdit(this)">Edit</button>
+                             <button type="button" class="btn btn-outline-danger" onClick="onDelete(this)">Delete</button>`;
+            } else {
+                alert('Error! not inserted');
+            }
+        });
+    }
+
+    function resetForm() {
+        url.value = '';
+        logo.value = null;
+        blah.src = "#";
+        selectedRow = null;
+    }
+
+    function onEdit(td) {
+        selectedRow = td.parentElement.parentElement;
+        url.value = selectedRow.cells[0].innerHTML;
+        logo.value = selectedRow.cells[1].innerHTML;
+        blah.src = selectedRow.cells[1].innerHTML;
+    }
+
+    function updateRecord(formData) {
+        axios.put(`/api/news?url=${selectedRow.cells[0].innerHTML}`, formData).then(function (res) {
+            if (res.status === 200) {
+                selectedRow.cells[0].innerHTML = formData.url;
+                selectedRow.cells[1].innerHTML = formData.logo;
+            } else {
+                alert('Error! not updated');
+            }
+        });
+    }
+
+    function onDelete(td) {
+        if (confirm('Are you sure to delete this record ?')) {
+            row = td.parentElement.parentElement;
+            axios.delete(`/api/news?url=${row.cells[0].innerHTML}`).then(function (res) {
+                if (res.status === 200) {
+                    row.remove();
+                } else {
+                    alert('Error! not deleted');
+                }
+            });
+        }
+    }
+
+</script>

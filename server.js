@@ -1,8 +1,9 @@
 require('dotenv').config();
 const express = require('express');
+const ejs = require('ejs');
+const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const app = express();
 const {Op} = require('sequelize');
 const db = require('./db/index.js');
 const {ranking, admin} = db;
@@ -46,7 +47,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/admin', function (req, res) {
-  res.render('login');
+  res.render('login', {error: null});
 });
 
 app.post('/admin', async function (req, res) {
@@ -61,14 +62,30 @@ app.post('/admin', async function (req, res) {
         },
       })
       .then(function (info) {
-        res.render('admin', {username: req.body.username});
+        if (info) {
+          res.render('admin', {username: req.body.username});
+        } else {
+          res.render('login', {error: 'Invalid username or password'});
+        }
       })
       .catch(function (err) {
-        res.json({data: err});
+        res.sendStatus(500);
       });
   } else {
     res.redirect('/admin');
   }
+});
+
+app.get('/admin/news', async function (req, res) {
+  ejs.renderFile('views/news-admin.ejs', function (err, data) {
+    res.send(data);
+  });
+});
+
+app.get('/admin/ranking', async function (req, res) {
+  ejs.renderFile('views/ranking-admin.ejs', function (err, data) {
+    res.send(data);
+  });
 });
 
 app.listen(port, () => {

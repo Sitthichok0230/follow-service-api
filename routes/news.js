@@ -1,48 +1,64 @@
 const express = require('express');
 const router = express.Router();
+// var formidable = require('formidable');
+var fs = require('fs');
+request = require('request');
 const db = require('../db/index.js');
 const {news} = db;
 db.sequelize.sync();
 
-router.route('/news?').get(async (req, res) => {
-  newsData = await news.findAll({
-    attributes: ['url', 'logo', 'createdAt', 'updatedAt'],
-  });
-  res.json({data: newsData});
-});
-
 router
-  .route('/news/:url')
+  .route('/news')
   .all((req, res, next) => {
-    const url = req.params.url;
-    const data = req.body.data;
+    const url = req.query.url;
+    const data = req.body;
+    console.log(data);
     res.url = url;
     res.data = data;
     next();
   })
   .get(async (req, res) => {
-    await news
-      .findOne({where: {url: res.url}})
-      .then(function (data) {
-        if (!data) {
-          res.send();
-        } else {
-          res.send(data);
-        }
-      })
-      .catch(function (err) {
-        console.log(err);
-        res.sendStatus(500);
-      });
+    if (res.url) {
+      await news
+        .findOne({where: {url: res.url}})
+        .then(function (data) {
+          if (data) {
+            res.json({data: data});
+          } else {
+            res.send();
+          }
+        })
+        .catch(function (err) {
+          console.log(err);
+          res.sendStatus(500);
+        });
+    } else {
+      await news
+        .findAll({
+          attributes: ['url', 'logo', 'createdAt', 'updatedAt'],
+          order: [['createdAt']],
+        })
+        .then(function (data) {
+          if (data) {
+            res.json({data: data});
+          } else {
+            res.send();
+          }
+        })
+        .catch(function (err) {
+          console.log(err);
+          res.sendStatus(500);
+        });
+    }
   })
   .post(async (req, res) => {
     await news
       .create({
-        url: res.url,
-        logo: res.logo,
+        url: res.data.url,
+        logo: res.data.logo,
       })
-      .then(function (data) {
-        res.sendStatus(200);
+      .then(function (info) {
+        res.send();
       })
       .catch(function (err) {
         console.log(err);
@@ -54,13 +70,14 @@ router
       .update(
         {
           url: res.data.url,
+          logo: res.data.logo,
         },
         {
           where: {url: res.url},
         }
       )
       .then(function (data) {
-        res.sendStatus(200);
+        res.send();
       })
       .catch(function (err) {
         console.log(err);
@@ -73,7 +90,7 @@ router
         where: {url: res.url},
       })
       .then(function (info) {
-        res.sendStatus(200);
+        res.send();
       })
       .catch(function (err) {
         console.log(err);

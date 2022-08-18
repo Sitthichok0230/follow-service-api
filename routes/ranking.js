@@ -11,54 +11,70 @@ router.route('/cacheclear').get(async (req, res) => {
   res.send('cache cleared');
 });
 
-router.route('/ranking?').get(async (req, res) => {
-  const config = req.query.all;
-  if (config) {
-    rankingData = await ranking.findAll({
-      order: [['score', 'DESC']],
-    });
-    res.json({data: rankingData});
-  } else {
-    redisClient.get('ranking', async (err, data) => {
-      if (err) {
-        console.log(err);
-      } else {
-        if (data) {
-          res.json({data: JSON.parse(data)});
-        } else {
-          rankingData = await ranking.findAll({
-            limit: 100,
-            order: [['score', 'DESC']],
-          });
-          rankingData = rankingData.map((item) => item.word);
-          redisClient.setex('ranking', 60 * 60, JSON.stringify(rankingData));
-          res.json({data: rankingData});
-        }
-      }
-    });
-  }
-});
-
 router
-  .route('/ranking/:word')
+  .route('/ranking/:word?')
   .all((req, res, next) => {
     const word = req.params.word;
     res.word = word;
     next();
   })
   .get(async (req, res) => {
-    await ranking
-      .findByPk(res.word)
-      .then(function (data) {
-        if (!data) {
-          res.send();
-        } else {
-          res.send(data);
-        }
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
+    if (res.word) {
+      await ranking
+        .findByPk(res.word)
+        .then(function (data) {
+          if (!data) {
+            res.send();
+          } else {
+            res.send(data);
+          }
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+    } else {
+      const config = req.query.all;
+      if (config) {
+        rankingData = await ranking
+          .findAll({
+            order: [['score', 'DESC']],
+          })
+          .then(function (rankingData) {
+            res.json({data: rankingData});
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+      } else {
+        redisClient.get('ranking', async (err, data) => {
+          if (err) {
+            console.log(err);
+          } else {
+            if (data) {
+              res.json({data: JSON.parse(data)});
+            } else {
+              rankingData = await ranking
+                .findAll({
+                  limit: 100,
+                  order: [['score', 'DESC']],
+                })
+                .then(function (rankingData) {
+                  rankingData = rankingData.map((item) => item.word);
+                  redisClient.setex(
+                    'ranking',
+                    60 * 60,
+                    JSON.stringify(rankingData)
+                  );
+                  res.json({data: rankingData});
+                })
+                .catch(function (err) {
+                  console.log(err);
+                });
+            }
+          }
+        });
+      }
+    }
   })
   .put(async (req, res) => {
     word = await ranking.findOne({
