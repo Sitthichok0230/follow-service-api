@@ -20,8 +20,8 @@ jobs:
     needs: [build]
     steps:
       - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.12.12 
+      - uses: bounceapp/render-action@0.3.0
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "follow-service"
-          heroku_email: "sitthichok.paugchan@gmail.com"
+          email: ${{ secrets.RENDER_EMAIL }}
+          password: ${{ secrets.RENDER_PASSWORD }}
+          service-id: srv-ccktjbpgp3jhcld5mq6g

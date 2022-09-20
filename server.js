@@ -88,12 +88,6 @@ app.get('/admin/ranking', async function (req, res) {
   });
 });
 
-app.listen(port, () => {
-  console.log(`API server listening at port: ${port}`);
-});
-
-setInterval(myTimer, 60 * 60 * 1000);
-
 async function myTimer() {
   await ranking.destroy({
     where: {
@@ -101,3 +95,9 @@ async function myTimer() {
     },
   });
 }
+
+setInterval(myTimer, 60 * 60 * 1000);
+
+app.listen(port, () => {
+  console.log(`API server listening at port: ${port}`);
+});
