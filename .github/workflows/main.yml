@@ -20,7 +20,7 @@ jobs:
     needs: [build]
     steps:
       - uses: actions/checkout@v2
-      - uses: bounceapp/render-action@0.3.0
+      - uses: bounceapp/render-action@0.2.0
         with:
           email: ${{ secrets.RENDER_EMAIL }}
           password: ${{ secrets.RENDER_PASSWORD }}
