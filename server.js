@@ -91,12 +91,12 @@ app.get('/admin/ranking', async function (req, res) {
 async function myTimer() {
   await ranking.destroy({
     where: {
-      updatedAt: {[Op.lte]: Date.now() - 60 * 1000},
+      updatedAt: {[Op.lte]: Date.now() - 24 * 60 * 60 * 1000},
     },
   });
 }
 
-setInterval(myTimer, 60 * 1000);
+setInterval(myTimer, 60 * 60 * 1000);
 
 app.listen(port, () => {
   console.log(`API server listening at port: ${port}`);
