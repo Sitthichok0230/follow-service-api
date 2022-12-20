@@ -47,7 +47,7 @@
         let html = "";
         for (let i = 0; i < data.length; i++) {
             html += `<tr>
-                        <td>${data[i].url}</td>
+                        <th scope="row">${data[i].url}</th>
                         <td>${data[i].logo}</td>
                         <td>
                             <button type="button" class="btn btn-outline-secondary" onClick="onEdit(this)">Edit</button>

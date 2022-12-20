@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 // var formidable = require('formidable');
+// var multer = require('multer');
 var fs = require('fs');
 request = require('request');
 const db = require('../db/index.js');
@@ -12,7 +13,6 @@ router
   .all((req, res, next) => {
     const url = req.query.url;
     const data = req.body;
-    console.log(data);
     res.url = url;
     res.data = data;
     next();
@@ -29,7 +29,6 @@ router
           }
         })
         .catch(function (err) {
-          console.log(err);
           res.sendStatus(500);
         });
     } else {
@@ -46,7 +45,6 @@ router
           }
         })
         .catch(function (err) {
-          console.log(err);
           res.sendStatus(500);
         });
     }
@@ -61,7 +59,6 @@ router
         res.send();
       })
       .catch(function (err) {
-        console.log(err);
         res.sendStatus(500);
       });
   })
@@ -80,7 +77,6 @@ router
         res.send();
       })
       .catch(function (err) {
-        console.log(err);
         res.sendStatus(500);
       });
   })
@@ -93,7 +89,6 @@ router
         res.send();
       })
       .catch(function (err) {
-        console.log(err);
         res.sendStatus(500);
       });
   });

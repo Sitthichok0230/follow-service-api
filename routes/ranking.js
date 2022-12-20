@@ -30,7 +30,7 @@ router
           }
         })
         .catch(function (err) {
-          console.log(err);
+          
         });
     } else {
       const config = req.query.all;
@@ -43,12 +43,12 @@ router
             res.json({data: rankingData});
           })
           .catch(function (err) {
-            console.log(err);
+            
           });
       } else {
         redisClient.get('ranking', async (err, data) => {
           if (err) {
-            console.log(err);
+            
           } else {
             if (data) {
               res.json({data: JSON.parse(data)});
@@ -68,7 +68,7 @@ router
                   res.json({data: rankingData});
                 })
                 .catch(function (err) {
-                  console.log(err);
+                  
                 });
             }
           }
@@ -95,7 +95,7 @@ router
           res.sendStatus(200);
         })
         .catch(function (err) {
-          console.log(err);
+          
         });
     } else {
       await ranking
@@ -107,7 +107,7 @@ router
           res.sendStatus(200);
         })
         .catch(function (err) {
-          console.log(err);
+          
         });
     }
   });
