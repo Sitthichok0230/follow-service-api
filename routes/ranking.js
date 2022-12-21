@@ -62,7 +62,7 @@ router
                   rankingData = rankingData.map((item) => item.word);
                   redisClient.setex(
                     'ranking',
-                    10 * 60,
+                    1 * 60,
                     JSON.stringify(rankingData)
                   );
                   res.json({data: rankingData});

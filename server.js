@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const {Op} = require('sequelize');
 const db = require('./db/index.js');
 const {ranking, admin} = db;
+
 db.sequelize.sync();
 
 const port = process.env.PORT || 3000;
@@ -91,12 +92,12 @@ app.get('/admin/ranking', async function (req, res) {
 async function myTimer() {
   await ranking.destroy({
     where: {
-      updatedAt: {[Op.lte]: Date.now() - 24 * 60 * 60 * 1000},
+      updatedAt: {[Op.lte]: Date.now() - 1 * 60 * 60 * 1000},
     },
   });
 }
 
-setInterval(myTimer, 60 * 60 * 1000);
+setInterval(myTimer, 1 * 60 * 1000);
 
 app.listen(port, () => {
   console.log(`API server listening at port: ${port}`);
