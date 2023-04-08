@@ -3,7 +3,6 @@ const express = require('express');
 const ejs = require('ejs');
 const app = express();
 const cors = require('cors');
-const bodyParser = require('body-parser');
 const {Op} = require('sequelize');
 const db = require('./db/index.js');
 const {ranking, admin} = db;
@@ -13,8 +12,6 @@ db.sequelize.sync();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
 
 const corsOptions = {
   origin: '*',
