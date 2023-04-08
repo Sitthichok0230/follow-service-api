@@ -6,7 +6,7 @@ const db = require('../db/index.js');
 const {ranking} = db;
 db.sequelize.sync();
 
-router.route('/cacheclear').get(async (req, res) => {
+router.route('/ranking/clear-cache').get(async (req, res) => {
   redisClient.flushdb();
   res.send('cache cleared');
 });
@@ -30,7 +30,8 @@ router
           }
         })
         .catch(function (err) {
-          res.status(500);
+          res.status(err.status || 500);
+          res.render('error');
         });
     } else {
       const config = req.query.all;
@@ -43,12 +44,14 @@ router
             res.json({data: rankingData});
           })
           .catch(function (err) {
-            res.status(500);
+            res.status(err.status || 500);
+            res.render('error');
           });
       } else {
         redisClient.get('ranking', async (err, data) => {
           if (err) {
-            res.status(500);
+            res.status(err.status || 500);
+            res.render('error');
           } else {
             if (data) {
               res.json({data: JSON.parse(data)});
@@ -68,7 +71,8 @@ router
                   res.json({data: rankingData});
                 })
                 .catch(function (err) {
-                  res.status(500);
+                  res.status(err.status || 500);
+                  res.render('error');
                 });
             }
           }
@@ -95,7 +99,8 @@ router
           res.sendStatus(200);
         })
         .catch(function (err) {
-          res.status(500);
+          res.status(err.status || 500);
+          res.render('error');
         });
     } else {
       await ranking
@@ -107,7 +112,8 @@ router
           res.sendStatus(200);
         })
         .catch(function (err) {
-          res.status(500);
+          res.status(err.status || 500);
+          res.render('error');
         });
     }
   });

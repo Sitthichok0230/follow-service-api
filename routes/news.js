@@ -29,7 +29,8 @@ router
           }
         })
         .catch(function (err) {
-          res.sendStatus(500);
+          res.status(err.status || 500);
+          res.render('error');
         });
     } else {
       await news
@@ -45,7 +46,8 @@ router
           }
         })
         .catch(function (err) {
-          res.sendStatus(500);
+          res.status(err.status || 500);
+          res.render('error');
         });
     }
   })
@@ -59,7 +61,8 @@ router
         res.send();
       })
       .catch(function (err) {
-        res.sendStatus(500);
+        res.status(err.status || 500);
+        res.render('error');
       });
   })
   .put(async (req, res) => {
@@ -77,7 +80,8 @@ router
         res.send();
       })
       .catch(function (err) {
-        res.sendStatus(500);
+        res.status(err.status || 500);
+        res.render('error');
       });
   })
   .delete(async (req, res) => {
@@ -89,7 +93,8 @@ router
         res.send();
       })
       .catch(function (err) {
-        res.sendStatus(500);
+        res.status(err.status || 500);
+        res.render('error');
       });
   });
 
