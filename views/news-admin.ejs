@@ -1,72 +1,80 @@
-<h5>
-    News Manager
-</h5>
+<h5>News Manager</h5>
 <br />
 <div class="news-form">
-    <form onsubmit="event.preventDefault();onFormSubmit();" autocomplete="off">
-        <div class="mb-3">
-            <label for="url" class="form-label">URL</label>
-            <input type="url" class="form-control" name="url" id="url">
-        </div>
-        <div class="mb-3">
-            <label for="logo" class="form-label">Logo</label>
-            <input type="url" class="form-control" name="logo" id="logo">
-            <script>
-                document.getElementById("url").onchange = evt => {
-                    if (document.getElementById("url").value == "" || document.getElementById("logo").value == "") {
-                        document.getElementById("submit").disabled = true;
-                    } else {
-                        document.getElementById("submit").disabled = false;
-                    }
-                }
-            </script>
-            <br>
-            <div id="logo-image">
-                <img loading="lazy" id="blah" width="150" src="#"
-                    onerror="this.onerror=null;this.src='https://via.placeholder.com/150';" />
-                <script>
-                    document.getElementById("logo").onchange = evt => {
-                        if (document.getElementById("logo").value == "") {
-                            document.getElementById("blah").src = "https://via.placeholder.com/150";
-                        } else {
-                            document.getElementById("blah").src = document.getElementById("logo").value;
-                        }
-                        if (document.getElementById("url").value == "" || document.getElementById("logo").value == "") {
-                            document.getElementById("submit").disabled = true;
-                        } else {
-                            document.getElementById("submit").disabled = false;
-                        }
-                    }
-                </script>
-            </div>
-        </div>
-        <div class="mb-3">
-            <input type="submit" class="btn btn-primary" id="submit" value="Submit">
-        </div>
-    </form>
+  <form onsubmit="event.preventDefault();onFormSubmit();" autocomplete="off">
+    <div class="mb-3">
+      <label for="url" class="form-label">URL</label>
+      <input type="url" class="form-control" name="url" id="url" />
+    </div>
+    <div class="mb-3">
+      <label for="logo" class="form-label">Logo</label>
+      <input type="url" class="form-control" name="logo" id="logo" />
+      <script>
+        document.getElementById('url').onchange = (evt) => {
+          if (
+            document.getElementById('url').value == '' ||
+            document.getElementById('logo').value == ''
+          ) {
+            document.getElementById('submit').disabled = true;
+          } else {
+            document.getElementById('submit').disabled = false;
+          }
+        };
+      </script>
+      <br />
+      <div id="logo-image">
+        <img
+          loading="lazy"
+          id="blah"
+          width="150"
+          src="#"
+          onerror="this.onerror=null;this.src='https://via.placeholder.com/150';"
+        />
+        <script>
+          document.getElementById('logo').onchange = (evt) => {
+            if (document.getElementById('logo').value == '') {
+              document.getElementById('blah').src =
+                'https://via.placeholder.com/150';
+            } else {
+              document.getElementById('blah').src =
+                document.getElementById('logo').value;
+            }
+            if (
+              document.getElementById('url').value == '' ||
+              document.getElementById('logo').value == ''
+            ) {
+              document.getElementById('submit').disabled = true;
+            } else {
+              document.getElementById('submit').disabled = false;
+            }
+          };
+        </script>
+      </div>
+    </div>
+    <div class="mb-3">
+      <input type="submit" class="btn btn-primary" id="submit" value="Submit" />
+    </div>
+  </form>
 </div>
 <br />
-<h5>
-    News Table
-</h5>
+<h5>News Table</h5>
 <br />
 <table class="table table-striped" id="newsList">
-    <thead>
-        <tr>
-            <th scope="col">URL</th>
-            <th scope="col">Logo</th>
-            <th scope="col">Actions</th>
-        </tr>
-    </thead>
-    <tbody id="news">
-    </tbody>
+  <thead>
+    <tr>
+      <th scope="col">URL</th>
+      <th scope="col">Logo</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody id="news"></tbody>
 </table>
 <script>
-    axios.get('/api/news').then(res => {
-        let data = res.data.data;
-        let html = "";
-        for (let i = 0; i < data.length; i++) {
-            html += `<tr>
+  axios.get('/api/news').then((res) => {
+    let data = res.data.data;
+    let html = '';
+    for (let i = 0; i < data.length; i++) {
+      html += `<tr>
                         <th scope="row">${data[i].url}</th>
                         <td><img loading="lazy" id="blah" width="150" src="${data[i].logo}"
                             onerror="this.onerror=null;this.src='https://via.placeholder.com/150';" />
@@ -76,96 +84,100 @@
                             <button type="button" class="btn btn-outline-danger" onClick="onDelete(this)">Delete</button>
                         </td>
                     </tr>`;
-        }
-        news.innerHTML = html;
-    });
-
-    var selectedRow = null;
-
-    document.getElementById("submit").disabled = true;
-
-    function onFormSubmit() {
-        var formData = readFormData();
-        if (selectedRow == null) insertNewRecord(formData);
-        else updateRecord(formData);
-        resetForm();
     }
+    news.innerHTML = html;
+  });
 
-    function readFormData() {
-        var formData = {};
-        formData.url = url.value;
-        formData.logo = logo.value;
-        return formData;
-    }
+  var selectedRow = null;
 
-    function insertNewRecord(formData) {
-        axios.post('/api/news', formData).then(res => {
-            if (res.status === 200) {
-                var table = newsList
-                    .getElementsByTagName('tbody')[0];
-                var newRow = table.insertRow(table.length);
-                cell1 = newRow.insertCell(0);
-                cell1.innerHTML = `${formData.url}`;
-                cell2 = newRow.insertCell(1);
-                cell2.innerHTML = `${formData.logo}`;
-                cell3 = newRow.insertCell(2);
-                cell3.innerHTML = `<button type="button" class="btn btn-outline-secondary" onClick="onEdit(this)">Edit</button>
+  document.getElementById('submit').disabled = true;
+
+  function onFormSubmit() {
+    var formData = readFormData();
+    if (selectedRow == null) insertNewRecord(formData);
+    else updateRecord(formData);
+    resetForm();
+  }
+
+  function readFormData() {
+    var formData = {};
+    formData.url = url.value;
+    formData.logo = logo.value;
+    return formData;
+  }
+
+  function insertNewRecord(formData) {
+    axios.post('/api/news', formData).then((res) => {
+      if (res.status === 200) {
+        var table = newsList.getElementsByTagName('tbody')[0];
+        var newRow = table.insertRow(table.length);
+        cell1 = newRow.insertCell(0);
+        cell1.innerHTML = `${formData.url}`;
+        cell2 = newRow.insertCell(1);
+        cell2.innerHTML = `${formData.logo}`;
+        cell3 = newRow.insertCell(2);
+        cell3.innerHTML = `<button type="button" class="btn btn-outline-secondary" onClick="onEdit(this)">Edit</button>
                              <button type="button" class="btn btn-outline-danger" onClick="onDelete(this)">Delete</button>`;
-            } else {
-                alert('Error! not inserted');
-            }
-        });
-    }
+      } else {
+        alert('Error! not inserted');
+      }
+    });
+  }
 
-    function resetForm() {
-        url.value = '';
-        logo.value = null;
-        blah.src = "#";
-        selectedRow = null;
-    }
+  function resetForm() {
+    url.value = '';
+    logo.value = null;
+    blah.src = 'https://via.placeholder.com/150';
+    selectedRow = null;
+  }
 
-    function onEdit(td) {
-        selectedRow = td.parentElement.parentElement;
-        url.value = selectedRow.cells[0].innerHTML;
-        document.getElementById("logo-image").innerHTML = selectedRow.cells[1].innerHTML + "<script>\
-                    document.getElementById(\"logo\").onchange = evt => {\
-                        if (document.getElementById(\"logo\").value == \"\") {\
-                            document.getElementById(\"blah\").src = \"https://via.placeholder.com/150\";\
+  function onEdit(td) {
+    selectedRow = td.parentElement.parentElement;
+    url.value = selectedRow.cells[0].innerHTML;
+    document.getElementById('logo-image').innerHTML =
+      selectedRow.cells[1].innerHTML +
+      '<script>\
+                    document.getElementById("logo").onchange = evt => {\
+                        if (document.getElementById("logo").value == "") {\
+                            document.getElementById("blah").src = "https://via.placeholder.com/150";\
                         } else {\
-                            document.getElementById(\"blah\").src = document.getElementById(\"logo\").value;\
+                            document.getElementById("blah").src = document.getElementById("logo").value;\
                         }\
-                        if (document.getElementById(\"url\").value == \"\" || document.getElementById(\"logo\").value == \"\") {\
-                            document.getElementById(\"submit\").disabled = true;\
+                        if (document.getElementById("url").value == "" || document.getElementById("logo").value == "") {\
+                            document.getElementById("submit").disabled = true;\
                         } else {\
-                            document.getElementById(\"submit\").disabled = false;\
+                            document.getElementById("submit").disabled = false;\
                         }\
                     }\
-                <\/script>";
-        logo.value = document.getElementById("blah").src;
-    }
+                <\/script>';
+    logo.value = document.getElementById('blah').src;
+  }
 
-    function updateRecord(formData) {
-        axios.put(`/api/news?url=${selectedRow.cells[0].innerHTML}`, formData).then(function (res) {
-            if (res.status === 200) {
-                selectedRow.cells[0].innerHTML = formData.url;
-                selectedRow.cells[1].innerHTML = formData.logo;
-            } else {
-                alert('Error! not updated');
-            }
+  function updateRecord(formData) {
+    axios
+      .put(`/api/news?url=${selectedRow.cells[0].innerHTML}`, formData)
+      .then(function (res) {
+        if (res.status === 200) {
+          selectedRow.cells[0].innerHTML = formData.url;
+          selectedRow.cells[1].innerHTML = formData.logo;
+        } else {
+          alert('Error! not updated');
+        }
+      });
+  }
+
+  function onDelete(td) {
+    if (confirm('Are you sure to delete this record ?')) {
+      row = td.parentElement.parentElement;
+      axios
+        .delete(`/api/news?url=${row.cells[0].innerHTML}`)
+        .then(function (res) {
+          if (res.status === 200) {
+            row.remove();
+          } else {
+            alert('Error! not deleted');
+          }
         });
     }
-
-    function onDelete(td) {
-        if (confirm('Are you sure to delete this record ?')) {
-            row = td.parentElement.parentElement;
-            axios.delete(`/api/news?url=${row.cells[0].innerHTML}`).then(function (res) {
-                if (res.status === 200) {
-                    row.remove();
-                } else {
-                    alert('Error! not deleted');
-                }
-            });
-        }
-    }
-
+  }
 </script>
