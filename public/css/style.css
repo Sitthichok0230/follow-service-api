@@ -1,5 +1,5 @@
 body {
-  background: #f2f2f2;
+  background: white;
 }
 
 .grid {
@@ -11,18 +11,22 @@ body {
 
 .content {
   color: #242424;
-  box-sizing: border-box;
-  height: 100%;
-  padding: 10px;
+  border-radius: 30px;
+  overflow: hidden;
+  margin: 10px;
 }
 
 img {
   max-width: 100%;
 }
 
+table {
+  width: 100%;
+}
+
 @media (prefers-color-scheme: dark) {
   body {
-    background: #333;
+    background: black;
     color: white;
   }
 }

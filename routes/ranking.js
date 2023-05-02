@@ -1,9 +1,9 @@
 const redis = require('redis');
-const redisClient = redis.createClient({url: process.env.REDISCLOUD_URL});
+const redisClient = redis.createClient({ url: process.env.REDISCLOUD_URL });
 const express = require('express');
 const router = express.Router();
 const db = require('../db/index.js');
-const {ranking} = db;
+const { ranking } = db;
 db.sequelize.sync();
 
 router.route('/ranking/clear-cache').get(async (req, res) => {
@@ -41,7 +41,7 @@ router
             order: [['score', 'DESC']],
           })
           .then(function (rankingData) {
-            res.json({data: rankingData});
+            res.json({ data: rankingData });
           })
           .catch(function (err) {
             res.status(err.status || 500);
@@ -54,7 +54,7 @@ router
             res.render('error');
           } else {
             if (data) {
-              res.json({data: JSON.parse(data)});
+              res.json({ data: JSON.parse(data) });
             } else {
               rankingData = await ranking
                 .findAll({
@@ -68,7 +68,7 @@ router
                     1 * 60,
                     JSON.stringify(rankingData)
                   );
-                  res.json({data: rankingData});
+                  res.json({ data: rankingData });
                 })
                 .catch(function (err) {
                   res.status(err.status || 500);
@@ -83,7 +83,7 @@ router
   .put(async (req, res) => {
     word = await ranking.findOne({
       attributes: ['score'],
-      where: {word: res.word},
+      where: { word: res.word },
     });
     if (word) {
       await ranking
@@ -92,7 +92,7 @@ router
             score: word.score + 1,
           },
           {
-            where: {word: res.word},
+            where: { word: res.word },
           }
         )
         .then(function (data) {

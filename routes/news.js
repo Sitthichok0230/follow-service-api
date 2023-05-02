@@ -5,7 +5,7 @@ const router = express.Router();
 var fs = require('fs');
 request = require('request');
 const db = require('../db/index.js');
-const {news} = db;
+const { news } = db;
 db.sequelize.sync();
 
 router
@@ -20,10 +20,10 @@ router
   .get(async (req, res) => {
     if (res.url) {
       await news
-        .findOne({where: {url: res.url}})
+        .findOne({ where: { url: res.url } })
         .then(function (data) {
           if (data) {
-            res.json({data: data});
+            res.json({ data: data });
           } else {
             res.send();
           }
@@ -40,7 +40,7 @@ router
         })
         .then(function (data) {
           if (data) {
-            res.json({data: data});
+            res.json({ data: data });
           } else {
             res.send();
           }
@@ -73,7 +73,7 @@ router
           logo: res.data.logo,
         },
         {
-          where: {url: res.url},
+          where: { url: res.url },
         }
       )
       .then(function (data) {
@@ -87,7 +87,7 @@ router
   .delete(async (req, res) => {
     await news
       .destroy({
-        where: {url: res.url},
+        where: { url: res.url },
       })
       .then(function (info) {
         res.send();

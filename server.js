@@ -3,9 +3,9 @@ const express = require('express');
 const ejs = require('ejs');
 const app = express();
 const cors = require('cors');
-const {Op} = require('sequelize');
+const { Op } = require('sequelize');
 const db = require('./db/index.js');
-const {ranking, admin} = db;
+const { ranking, admin } = db;
 
 db.sequelize.sync();
 
@@ -25,7 +25,7 @@ const rankingRouter = require('./routes/ranking');
 const newsRouter = require('./routes/news');
 
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 
 app.use('/api', rankingRouter);
 app.use('/api', newsRouter);
@@ -45,7 +45,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/admin', function (req, res) {
-  res.render('login', {error: null});
+  res.render('login', { error: null });
 });
 
 app.post('/admin', async function (req, res) {
@@ -61,9 +61,9 @@ app.post('/admin', async function (req, res) {
       })
       .then(function (info) {
         if (info) {
-          res.render('admin', {username: req.body.username});
+          res.render('admin', { username: req.body.username });
         } else {
-          res.render('login', {error: 'Invalid username or password'});
+          res.render('login', { error: 'Invalid username or password' });
         }
       })
       .catch(function (err) {
@@ -89,7 +89,7 @@ app.get('/admin/ranking', async function (req, res) {
 async function myTimer() {
   await ranking.destroy({
     where: {
-      updatedAt: {[Op.lte]: Date.now() - 1 * 60 * 60 * 1000},
+      updatedAt: { [Op.lte]: Date.now() - 1 * 60 * 60 * 1000 },
     },
   });
 }
