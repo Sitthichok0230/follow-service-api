@@ -129,11 +129,13 @@
     logo.value = null;
     blah.src = 'https://via.placeholder.com/150';
     selectedRow = null;
+    document.getElementById('submit').disabled = true;
   }
 
   function onEdit(td) {
     selectedRow = td.parentElement.parentElement;
     url.value = selectedRow.cells[0].innerHTML;
+    document.getElementById('submit').disabled = true;
     document.getElementById('logo-image').innerHTML =
       selectedRow.cells[1].innerHTML +
       '<script>\
