@@ -1,3 +1,4 @@
+// Set up the environment
 require('dotenv').config();
 const express = require('express');
 const ejs = require('ejs');
@@ -7,12 +8,13 @@ const { Op } = require('sequelize');
 const db = require('./db/index.js');
 const { ranking, admin } = db;
 
+// Sync the database
 db.sequelize.sync();
 
+// Set up the port
 const port = process.env.PORT || 3000;
 
-app.use(express.json());
-
+// Enable CORS
 const corsOptions = {
   origin: '*',
   credentials: true,
@@ -21,17 +23,11 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-const rankingRouter = require('./routes/ranking');
-const newsRouter = require('./routes/news');
-
+// Set up the server
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/api', rankingRouter);
-app.use('/api', newsRouter);
-app.set('view engine', 'ejs');
-app.use(express.static(__dirname + '/public'));
-
+// Error handling
 app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -39,6 +35,16 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// Import the ranking and news routers
+const rankingRouter = require('./routes/ranking');
+const newsRouter = require('./routes/news');
+
+// Use the ranking and news routers
+app.use('/api', rankingRouter);
+app.use('/api', newsRouter);
+app.set('view engine', 'ejs');
+app.use(express.static(__dirname + '/public'));
 
 app.get('/', function (req, res) {
   res.render('home');

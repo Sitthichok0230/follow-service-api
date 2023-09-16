@@ -1,8 +1,8 @@
 ### GET All
 GET https://follow-service.onrender.com/api/ranking HTTP/1.1
 
-### PUT
+### PUT Word
 PUT https://follow-service.onrender.com/api/ranking/one HTTP/1.1
 
 ### GET Cache Clear
-PUT https://follow-service.onrender.com/api/ranking/one HTTP/1.1
+GET https://follow-service.onrender.com/api/cacheclear HTTP/1.1

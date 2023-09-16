@@ -1,3 +1,7 @@
+/* This code creates a grid of images and text. The grid is responsive, and
+ * the number of columns changes based on the size of the screen. The grid
+ * has a white background when the page is loaded, and a black background
+ * when the page is loaded in dark mode. */
 body {
   background: white;
 }
